@@ -6,4 +6,4 @@
     <title>Accident Insurance Resolution</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body></body>
+<body>
