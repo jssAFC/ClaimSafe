@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insurance providers table
-CREATE TABLE IF NOT EXISTS insurance_providers (
+-- Insurance Companies table
+CREATE TABLE IF NOT EXISTS insurance_companies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     company_name VARCHAR(100) NOT NULL,
@@ -34,6 +34,21 @@ CREATE TABLE IF NOT EXISTS accidents (
     photo_path VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Insurance Providers table
+CREATE TABLE IF NOT EXISTS insurance_providers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    region VARCHAR(100) NOT NULL,
+    company_id INT,
+    document_path VARCHAR(255) NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE SET NULL
 );
 
 -- Claims table
