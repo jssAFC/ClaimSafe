@@ -26,51 +26,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } 
     elseif ($role == 'agent') {
-        // Process insurance agent registration
-        $username = mysqli_real_escape_string($conn, $_POST['username']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-        $region = mysqli_real_escape_string($conn, $_POST['region']);
-        $corporation = mysqli_real_escape_string($conn, $_POST['corporation']);
+        // Start transaction for consistent database state
+        $conn->begin_transaction();
         
-        // File upload handling
-        $document_path = '';
-        if(isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
-            $upload_dir = '../uploads/documents/';
+        try {
+            // Process insurance agent registration
+            $username = mysqli_real_escape_string($conn, $_POST['username']);
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
+            $region = mysqli_real_escape_string($conn, $_POST['region']);
+            $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
             
-            // Create directory if it doesn't exist
-            if (!file_exists($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
-            
-            $filename = time() . '_' . basename($_FILES['document']['name']);
-            $target_file = $upload_dir . $filename;
-            
-            if (move_uploaded_file($_FILES['document']['tmp_name'], $target_file)) {
-                $document_path = $target_file;
-            } else {
-                $error = "Error uploading your document.";
-            }
-        } else {
-            $error = "Document upload is required.";
-        }
-        
-        if (empty($error)) {
-            // Insert into insurance_agent table
-            $status = 'pending'; // Default status for new agents
-            
-            $sql = "INSERT INTO insurance_agent (username, email, password, full_name, region, corporation, document_path, status) 
-                    VALUES ('$username', '$email', '$password', '$full_name', '$region', '$corporation', '$document_path', '$status')";
+            // 1. First, create the user account
+            $sql = "INSERT INTO users (username, email, password, full_name, role) 
+                    VALUES ('$username', '$email', '$password', '$full_name', 'provider')";
                     
             if ($conn->query($sql) === TRUE) {
-                // Send email to admin for review (you'll need to implement this)
+                $user_id = $conn->insert_id; // Get the new user ID
+                
+                // 2. Handle file upload for ID document
+                $document_path = '';
+                if(isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
+                    $upload_dir = '../uploads/documents/';
+                    
+                    // Create directory if it doesn't exist
+                    if (!file_exists($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    
+                    $filename = time() . '_' . basename($_FILES['document']['name']);
+                    $target_file = $upload_dir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['document']['tmp_name'], $target_file)) {
+                        $document_path = $target_file;
+                    } else {
+                        throw new Exception("Error uploading your document.");
+                    }
+                } else {
+                    throw new Exception("Document upload is required.");
+                }
+                
+                // 3. Insert into insurance_providers table
+                $sql = "INSERT INTO insurance_providers (user_id, full_name, email, region, company_id, document_path, status) 
+                        VALUES ('$user_id', '$full_name', '$email', '$region', '$company_id', '$document_path', 'pending')";
+                        
+                if ($conn->query($sql) !== TRUE) {
+                    throw new Exception("Error creating provider profile: " . $conn->error);
+                }
+                
+                // 4. Send email to admin for review (you'll need to implement this)
                 // notifyAdmin($email, $full_name, $corporation);
                 
+                // If everything succeeded, commit the transaction
+                $conn->commit();
                 $success = "Your registration has been submitted for review. You will be notified via email once approved.";
+                
             } else {
-                $error = "Error: " . $sql . "<br>" . $conn->error;
+                throw new Exception("Error creating user account: " . $conn->error);
             }
+        } catch (Exception $e) {
+            // Roll back the transaction if something failed
+            $conn->rollback();
+            $error = $e->getMessage();
         }
     }
 }
@@ -89,11 +107,11 @@ $states = [
 
 // Get insurance companies from database
 $insurance_companies = [];
-$sql = "SELECT id, name FROM insurance_companies ORDER BY name";
+$sql = "SELECT id, company_name FROM insurance_companies ORDER BY company_name";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        $insurance_companies[$row['id']] = $row['name'];
+        $insurance_companies[$row['id']] = $row['company_name'];
     }
 }
 ?>
@@ -215,11 +233,11 @@ if ($result && $result->num_rows > 0) {
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="corporation">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="company_id">
                             Insurance Company
                         </label>
                         <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="corporation" name="corporation" required>
+                            id="company_id" name="company_id" required>
                             <option value="">Select an insurance company</option>
                             <?php foreach ($insurance_companies as $id => $name): ?>
                                 <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
