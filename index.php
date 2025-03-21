@@ -31,19 +31,19 @@
                 </a>
             </p>
 
-            <div class="flex flex-col mb-6">
+            <div class="flex flex-col mb-6 relative">
                 <label class="text-sm sm:text-base font-medium -mb-6" >Username</label>
-                <svg class="w-[25px] h-[22px] fill-[#8c8c8c] relative top-8 left-1" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-[25px] h-[22px] fill-[#8c8c8c] absolute top-2 right-2 max-sm:top-1" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
                   <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"></path>
                 </svg>
-                <input placeholder="        Enter Username" type="text" class="border-b-[2px] border-gray-400  w-full h-10 p-2  focus:outline-none focus:border-blue-500">
+                <input placeholder="Enter Username" type="text" class="border-[1px] border-gray-400 rounded-md  w-full h-10 p-2  focus:outline-none focus:border-blue-500">
             </div>
-            <div class="flex flex-col mb-10">
+            <div class="flex flex-col mb-10 relative">
                 <label class="text-sm sm:text-base font-medium -mb-6">Password</label>
-                <svg class="w-[25px] h-[22px] fill-[#8c8c8c] relative top-8 left-1" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-[25px] h-[22px] fill-[#8c8c8c] absolute top-2 right-2 max-sm:top-1" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
                   <path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"></path>
                 </svg>
-                <input placeholder="        Enter Password" type="password" class="border-b-[2px] border-gray-400 w-full h-10 p-2  focus:outline-none focus:border-blue-500">
+                <input placeholder="Enter Password" type="password" class="border-[1px] border-gray-400 rounded-md w-full h-10 p-2  focus:outline-none focus:border-blue-500">
             </div>
 
             <div class="w-full">
