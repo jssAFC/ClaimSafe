@@ -23,6 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("location: user_dashboard.php");
             } else if ($row['role'] == 'provider') {
                 header("location: provider_dashboard.php");
+            } else if ($row['role'] == 'admin') {
+                header("location: admin_dashboard.php");
             }
         } else {
             $error = "Invalid password";
