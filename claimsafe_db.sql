@@ -12,16 +12,24 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insurance Companies table
+-- Insurance Companies table (Fixed: Added user_id)
 CREATE TABLE IF NOT EXISTS insurance_companies (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT NOT NULL, -- Added this line
     company_name VARCHAR(100) NOT NULL,
     contact_email VARCHAR(100) NOT NULL,
-    service_areas TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Service Areas table
+CREATE TABLE IF NOT EXISTS service_areas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    insurance_company_id INT NOT NULL,
+    state_name VARCHAR(100) NOT NULL,
+    FOREIGN KEY (insurance_company_id) REFERENCES insurance_companies(id) ON DELETE CASCADE,
+    UNIQUE KEY (insurance_company_id, state_name)
 );
 
 -- Accidents table
@@ -36,26 +44,25 @@ CREATE TABLE IF NOT EXISTS accidents (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insurance Providers table
+-- Insurance Providers table (Fixed: Removed duplicate `email`)
 CREATE TABLE IF NOT EXISTS insurance_providers (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
     region VARCHAR(100) NOT NULL,
     company_id INT,
     document_path VARCHAR(255) NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE SET NULL
 );
 
--- Claims table
+-- Claims table (Ensured referenced tables exist before this is created)
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    accident_id INT,
-    provider_id INT,
+    accident_id INT NOT NULL,
+    provider_id INT NOT NULL,
     status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accident_id) REFERENCES accidents(id) ON DELETE CASCADE,
@@ -65,8 +72,8 @@ CREATE TABLE IF NOT EXISTS claims (
 -- Messages table
 CREATE TABLE IF NOT EXISTS messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    claim_id INT,
-    sender_id INT,
+    claim_id INT NOT NULL,
+    sender_id INT NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (claim_id) REFERENCES claims(id) ON DELETE CASCADE,
