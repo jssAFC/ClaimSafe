@@ -91,6 +91,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = $e->getMessage();
         }
     }
+    /*if ($role == 'admin') {
+        // Process victim registration
+        $username = mysqli_real_escape_string($conn, $_POST['username']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
+        
+        // Insert into users table
+        $sql = "INSERT INTO users (username, email, password, full_name, role) 
+                VALUES ('$username', '$email', '$password', '$full_name', 'admin')";
+                
+        if ($conn->query($sql) === TRUE) {
+            $success = "Registration successful! You can now login.";
+        } else {
+            $error = "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }*/ 
 }
 
 // Get list of Indian states for the dropdown
@@ -149,6 +166,12 @@ if ($result && $result->num_rows > 0) {
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
                             Insurance Agent
                         </button>
+                        <!--
+                       <button type="button" id="admin-btn" 
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
+                            Admin
+                        </button>
+            -->
                     </div>
                 </div>
 
@@ -279,15 +302,18 @@ if ($result && $result->num_rows > 0) {
                             Already have an account?
                         </a>
                     </div>
-                </form>
+                </form>             
 
                 <script>
                     // Show the appropriate form based on role selection
                     document.getElementById('victim-btn').addEventListener('click', function() {
                         document.getElementById('role-selection-form').classList.add('hidden');
                         document.getElementById('victim-form').classList.remove('hidden');
-                    });
-                    
+                    });   
+                    /*document.getElementById('admin-btn').addEventListener('click', function() {
+                        document.getElementById('role-selection-form').classList.add('hidden');
+                        document.getElementById('victim-form').classList.remove('hidden');
+                    });*/
                     document.getElementById('agent-btn').addEventListener('click', function() {
                         document.getElementById('role-selection-form').classList.add('hidden');
                         document.getElementById('agent-form').classList.remove('hidden');
