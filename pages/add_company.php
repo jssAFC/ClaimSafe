@@ -12,35 +12,49 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $success_message = '';
 $error_message = '';
 
-// Get list of Indian states for the dropdown (same as in registration.php)
+// Get list of Indian states for the dropdown
 $states = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
-    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", 
-    "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", 
-    "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", 
-    "Uttar Pradesh", "Uttarakhand", "West Bengal",
-    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-    "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
 ];
 
-// Get list of provider users to associate with company
-$providers = [];
-$sql = "SELECT u.id, u.full_name, u.email FROM users u 
-        WHERE u.role = 'provider' 
-        ORDER BY u.full_name";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $providers[$row['id']] = $row['full_name'] . ' (' . $row['email'] . ')';
-    }
-}
-
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
     $contact_email = mysqli_real_escape_string($conn, $_POST['contact_email']);
-    $user_id = isset($_POST['user_id']) ? mysqli_real_escape_string($conn, $_POST['user_id']) : 'NULL';
     
     // Process service areas
     $service_areas = [];
@@ -49,24 +63,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $service_areas[] = mysqli_real_escape_string($conn, $area);
         }
     }
-    $service_areas_str = implode(',', $service_areas);
-    
+
     // Is active status
     $is_active = isset($_POST['is_active']) ? 1 : 0;
-    
-    // Insert into database
-    if ($user_id === 'NULL') {
-        $sql = "INSERT INTO insurance_companies (company_name, contact_email, service_areas, is_active) 
-                VALUES ('$company_name', '$contact_email', '$service_areas_str', $is_active)";
-    } else {
-        $sql = "INSERT INTO insurance_companies (user_id, company_name, contact_email, service_areas, is_active) 
-                VALUES ($user_id, '$company_name', '$contact_email', '$service_areas_str', $is_active)";
-    }
-    
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "New insurance company added successfully!";
-    } else {
-        $error_message = "Error: " . $sql . "<br>" . $conn->error;
+
+    // Begin transaction
+    $conn->begin_transaction();
+
+    try {
+        // Insert into insurance_companies table without user_id
+        $sql = "INSERT INTO insurance_companies (company_name, contact_email, is_active)
+                VALUES ('$company_name', '$contact_email', $is_active)";
+
+        if ($conn->query($sql) === TRUE) {
+            $company_id = $conn->insert_id;
+
+            // Insert service areas
+            foreach ($service_areas as $area) {
+                $area_sql = "INSERT INTO service_areas (insurance_company_id, state_name) 
+                            VALUES ($company_id, '$area')";
+                $conn->query($area_sql);
+            }
+
+            // Commit transaction
+            $conn->commit();
+            $success_message = "New insurance company added successfully!";
+        } else {
+            throw new Exception($conn->error);
+        }
+    } catch (Exception $e) {
+        // Rollback transaction if any error occurs
+        $conn->rollback();
+        $error_message = "Error: " . $e->getMessage();
     }
 }
 ?>
@@ -144,21 +172,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
 
-                    <!-- Associated User (Provider) -->
-                    <div class="col-span-2 md:col-span-1">
-                        <label for="user_id" class="block text-gray-700 text-sm font-bold mb-2">
-                            Associated Provider (Optional)
-                        </label>
-                        <select id="user_id" name="user_id"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            <option value="">None (No associated provider)</option>
-                            <?php foreach ($providers as $id => $name): ?>
-                                <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="text-sm text-gray-500 mt-1">Associate a primary provider user with this company if applicable</p>
-                    </div>
-
                     <!-- Active Status -->
                     <div class="col-span-2 md:col-span-1">
                         <label class="block text-gray-700 text-sm font-bold mb-2">
@@ -182,8 +195,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <?php foreach ($states as $state): ?>
                                     <div class="flex items-center">
-                                        <input type="checkbox" id="state_<?php echo str_replace(' ', '_', $state); ?>" 
-                                            name="service_areas[]" value="<?php echo $state; ?>" 
+                                        <input type="checkbox" id="state_<?php echo str_replace(' ', '_', $state); ?>"
+                                            name="service_areas[]" value="<?php echo $state; ?>"
                                             class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                         <label for="state_<?php echo str_replace(' ', '_', $state); ?>" class="ml-2 block text-gray-700 text-sm">
                                             <?php echo $state; ?>
@@ -193,14 +206,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </div>
                         <div class="mt-2 text-sm">
-                            <button type="button" id="select-all" class="text-blue-600 hover:text-blue-800">Select All</button> | 
+                            <button type="button" id="select-all" class="text-blue-600 hover:text-blue-800">Select All</button> |
                             <button type="button" id="deselect-all" class="text-blue-600 hover:text-blue-800">Deselect All</button>
                         </div>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="col-span-2 mt-4">
-                        <button type="submit" 
+                        <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             Add Insurance Company
                         </button>
