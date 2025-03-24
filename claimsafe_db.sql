@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insurance Companies table (Fixed: Added user_id)
+-- Insurance Companies table
 CREATE TABLE IF NOT EXISTS insurance_companies (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL, -- Added this line
+    user_id INT NOT NULL,
     company_name VARCHAR(100) NOT NULL,
     contact_email VARCHAR(100) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS accidents (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insurance Providers table (Fixed: Removed duplicate `email`)
+-- Insurance Providers table
 CREATE TABLE IF NOT EXISTS insurance_providers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS insurance_providers (
     FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE SET NULL
 );
 
--- Claims table (Ensured referenced tables exist before this is created)
+-- Claims table
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accident_id INT NOT NULL,
