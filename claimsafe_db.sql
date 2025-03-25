@@ -61,11 +61,11 @@ CREATE TABLE IF NOT EXISTS insurance_agents (
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accident_id INT NOT NULL,
-    agent_id INT NOT NULL,
+    company_id INT NOT NULL,
     status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accident_id) REFERENCES accidents(id) ON DELETE CASCADE,
-    FOREIGN KEY (agent_id) REFERENCES insurance_agents(id) ON DELETE CASCADE
+    FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE CASCADE
 );
 
 -- Messages table
