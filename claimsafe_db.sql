@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100) NOT NULL,
-    role ENUM('user', 'provider', 'admin') DEFAULT 'user',
+    role ENUM('user', 'agent', 'admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS insurance_companies (
     contact_email VARCHAR(100) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Service Areas table
@@ -44,8 +43,8 @@ CREATE TABLE IF NOT EXISTS accidents (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insurance Providers table
-CREATE TABLE IF NOT EXISTS insurance_providers (
+-- Insurance Agents table
+CREATE TABLE IF NOT EXISTS insurance_agents (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     full_name VARCHAR(100) NOT NULL,
@@ -62,11 +61,11 @@ CREATE TABLE IF NOT EXISTS insurance_providers (
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accident_id INT NOT NULL,
-    provider_id INT NOT NULL,
+    agent_id INT NOT NULL,
     status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accident_id) REFERENCES accidents(id) ON DELETE CASCADE,
-    FOREIGN KEY (provider_id) REFERENCES insurance_providers(id) ON DELETE CASCADE
+    FOREIGN KEY (agent_id) REFERENCES insurance_agents(id) ON DELETE CASCADE
 );
 
 -- Messages table
