@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // 1. First, create the user account
             $sql = "INSERT INTO users (username, email, password, full_name, role) 
-                    VALUES ('$username', '$email', '$password', '$full_name', 'provider')";
+                    VALUES ('$username', '$email', '$password', '$full_name', 'agent')";
 
             if ($conn->query($sql) === TRUE) {
                 $user_id = $conn->insert_id; // Get the new user ID
@@ -68,12 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } else {
                     throw new Exception("Document upload is required. Error code: " . ($_FILES['document']['error'] ?? 'No file uploaded'));
                 }
-                // 3. Insert into insurance_providers table
-                $sql = "INSERT INTO insurance_providers (user_id, full_name, region, company_id, document_path, status) 
+                // 3. Insert into insurance_agents table
+                $sql = "INSERT INTO insurance_agents (user_id, full_name, region, company_id, document_path, status) 
                 VALUES ('$user_id', '$full_name', '$region', '$company_id', '$document_path', 'pending')";
 
                 if ($conn->query($sql) !== TRUE) {
-                    throw new Exception("Error creating provider profile: " . $conn->error);
+                    throw new Exception("Error creating agent profile: " . $conn->error);
                 }
 
                 // 4. Send email to admin for review (you'll need to implement this)
