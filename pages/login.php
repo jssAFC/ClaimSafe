@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($row['role'] == 'user') {
                 header("location: user_dashboard.php");
-            } else if ($row['role'] == 'provider') {
-                header("location: provider_dashboard.php");
+            } else if ($row['role'] == 'agent') {
+                header("location: agent_dashboard.php");
             } else if ($row['role'] == 'admin') {
                 header("location: admin_dashboard.php");
             }
