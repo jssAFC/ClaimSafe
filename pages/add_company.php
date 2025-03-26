@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a href="admin_dashboard.php" class="block p-2 rounded hover:bg-blue-700">Dashboard</a>
                 </li>
                 <li class="mb-2">
-                    <a href="admin_dashboard.php#pending-providers" class="block p-2 rounded hover:bg-blue-700">Pending Providers</a>
+                    <a href="admin_dashboard.php#pending-agents" class="block p-2 rounded hover:bg-blue-700">Pending Agents</a>
                 </li>
                 <li class="mb-2">
                     <a href="admin_dashboard.php#recent-actions" class="block p-2 rounded hover:bg-blue-700">Recent Actions</a>

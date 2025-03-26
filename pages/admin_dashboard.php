@@ -12,45 +12,45 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $success_message = '';
 $error_message = '';
 
-// Handle provider approval/rejection
+// Handle agent approval/rejection
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action']) && isset($_POST['provider_id'])) {
-        $provider_id = mysqli_real_escape_string($conn, $_POST['provider_id']);
+    if (isset($_POST['action']) && isset($_POST['agent_id'])) {
+        $agent_id = mysqli_real_escape_string($conn, $_POST['agent_id']);
         
         if ($_POST['action'] === 'approve') {
-            // Update the provider status to approved
-            $sql = "UPDATE insurance_providers SET status = 'approved' WHERE id = '$provider_id'";
+            // Update the agent status to approved
+            $sql = "UPDATE insurance_agents SET status = 'approved' WHERE id = '$agent_id'";
             
             if ($conn->query($sql) === TRUE) {
-                // Get provider email to send notification
-                $sql = "SELECT p.email, p.full_name, u.id FROM insurance_providers p 
-                        JOIN users u ON p.user_id = u.id WHERE p.id = '$provider_id'";
+                // Get agent email to send notification
+                $sql = "SELECT p.email, p.full_name, u.id FROM insurance_agents p 
+                        JOIN users u ON p.user_id = u.id WHERE p.id = '$agent_id'";
                 $result = $conn->query($sql);
                 
                 if ($result && $result->num_rows > 0) {
                     $row = $result->fetch_assoc();
                     $user_id = $row['id'];
                     
-                    // Update user role to confirm provider status
-                    $update_user = "UPDATE users SET role = 'provider' WHERE id = '$user_id'";
+                    // Update user role to confirm agent status
+                    $update_user = "UPDATE users SET role = 'agent' WHERE id = '$user_id'";
                     $conn->query($update_user);
                     
                     // TODO: Send email notification (you would implement this function)
                     // sendApprovalEmail($row['email'], $row['full_name']);
                     
-                    $success_message = "Provider approved successfully.";
+                    $success_message = "Agent approved successfully.";
                 }
             } else {
-                $error_message = "Error approving provider: " . $conn->error;
+                $error_message = "Error approving agent: " . $conn->error;
             }
         } 
         elseif ($_POST['action'] === 'reject') {
-            // Update the provider status to rejected
-            $sql = "UPDATE insurance_providers SET status = 'rejected' WHERE id = '$provider_id'";
+            // Update the agent status to rejected
+            $sql = "UPDATE insurance_agents SET status = 'rejected' WHERE id = '$agent_id'";
             
             if ($conn->query($sql) === TRUE) {
-                // Get provider email to send notification
-                $sql = "SELECT email, full_name FROM insurance_providers WHERE id = '$provider_id'";
+                // Get agent email to send notification
+                $sql = "SELECT email, full_name FROM insurance_agents WHERE id = '$agent_id'";
                 $result = $conn->query($sql);
                 
                 if ($result && $result->num_rows > 0) {
@@ -59,19 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // TODO: Send email notification
                     // sendRejectionEmail($row['email'], $row['full_name']);
                     
-                    $success_message = "Provider rejected successfully.";
+                    $success_message = "Agent rejected successfully.";
                 }
             } else {
-                $error_message = "Error rejecting provider: " . $conn->error;
+                $error_message = "Error rejecting agent: " . $conn->error;
             }
         }
     }
 }
 
-// Get pending provider applications
-$pending_providers = [];
+// Get pending agent applications
+$pending_agents = [];
 $sql = "SELECT p.id, p.user_id, p.full_name, p.email, p.region, p.document_path, p.created_at, 
-        c.company_name FROM insurance_providers p 
+        c.company_name FROM insurance_agents p 
         LEFT JOIN insurance_companies c ON p.company_id = c.id
         WHERE p.status = 'pending' 
         ORDER BY p.created_at DESC";
@@ -79,14 +79,14 @@ $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $pending_providers[] = $row;
+        $pending_agents[] = $row;
     }
 }
 
-// Get recently approved/rejected providers
-$recent_providers = [];
+// Get recently approved/rejected agents
+$recent_agents = [];
 $sql = "SELECT p.id, p.full_name, p.email, p.region, p.status, p.updated_at, c.company_name
-        FROM insurance_providers p
+        FROM insurance_agents p
         LEFT JOIN insurance_companies c ON p.company_id = c.id
         WHERE p.status IN ('approved', 'rejected')
         ORDER BY p.updated_at DESC LIMIT 10";
@@ -94,7 +94,7 @@ $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $recent_providers[] = $row;
+        $recent_agents[] = $row;
     }
 }
 
@@ -129,7 +129,7 @@ $claim_stats = $result->fetch_assoc();
                     <a href="#dashboard" class="block p-2 rounded hover:bg-blue-700">Dashboard</a>
                 </li>
                 <li class="mb-2">
-                    <a href="#pending-providers" class="block p-2 rounded hover:bg-blue-700">Pending Providers</a>
+                    <a href="#pending-agents" class="block p-2 rounded hover:bg-blue-700">Pending Agents</a>
                 </li>
                 <li class="mb-2">
                     <a href="#recent-actions" class="block p-2 rounded hover:bg-blue-700">Recent Actions</a>
@@ -176,16 +176,16 @@ $claim_stats = $result->fetch_assoc();
                     </div>
                     <div class="text-sm text-gray-500 mt-2">
                         Victims: <?php echo isset($user_stats['user']) ? $user_stats['user'] : 0; ?><br>
-                        Providers: <?php echo isset($user_stats['provider']) ? $user_stats['provider'] : 0; ?><br>
+                        Agent: <?php echo isset($user_stats['agent']) ? $user_stats['agent'] : 0; ?><br>
                         Admins: <?php echo isset($user_stats['admin']) ? $user_stats['admin'] : 0; ?>
                     </div>
                 </div>
 
-                <!-- Provider Applications -->
+                <!-- Agent Applications -->
                 <div class="bg-white rounded-lg shadow p-4">
-                    <h3 class="font-bold text-gray-700 mb-2">Pending Providers</h3>
+                    <h3 class="font-bold text-gray-700 mb-2">Pending Agents</h3>
                     <div class="text-3xl font-bold text-yellow-600">
-                        <?php echo count($pending_providers); ?>
+                        <?php echo count($pending_agents); ?>
                     </div>
                     <div class="text-sm text-gray-500 mt-2">
                         Applications awaiting review
@@ -220,11 +220,11 @@ $claim_stats = $result->fetch_assoc();
             </div>
         </section>
 
-        <!-- Pending Provider Applications -->
-        <section id="pending-providers" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Pending Provider Applications</h2>
+        <!-- Pending Agent Applications -->
+        <section id="pending-agents" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Pending Agent Applications</h2>
             
-            <?php if (empty($pending_providers)): ?>
+            <?php if (empty($pending_agents)): ?>
                 <div class="bg-white rounded-lg shadow p-4">
                     <p class="text-gray-500">No pending applications at this time.</p>
                 </div>
@@ -243,30 +243,30 @@ $claim_stats = $result->fetch_assoc();
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($pending_providers as $provider): ?>
+                            <?php foreach ($pending_agents as $agents): ?>
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['full_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['email']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['company_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['region']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($provider['created_at'])); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['full_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['email']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['company_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['region']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="<?php echo htmlspecialchars($provider['document_path']); ?>" target="_blank" 
+                                        <a href="<?php echo htmlspecialchars($agent['document_path']); ?>" target="_blank" 
                                             class="text-blue-600 hover:text-blue-900">View Document</a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <form method="POST" action="" class="inline">
-                                            <input type="hidden" name="provider_id" value="<?php echo $provider['id']; ?>">
+                                            <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                             <input type="hidden" name="action" value="approve">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to approve this provider?')" 
+                                            <button type="submit" onclick="return confirm('Are you sure you want to approve this agent?')" 
                                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-1">
                                                 Approve
                                             </button>
                                         </form>
                                         <form method="POST" action="" class="inline">
-                                            <input type="hidden" name="provider_id" value="<?php echo $provider['id']; ?>">
+                                            <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                             <input type="hidden" name="action" value="reject">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this provider?')" 
+                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this agent?')" 
                                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                                                 Reject
                                             </button>
@@ -280,13 +280,13 @@ $claim_stats = $result->fetch_assoc();
             <?php endif; ?>
         </section>
 
-        <!-- Recent Provider Actions -->
+        <!-- Recent Agent Actions -->
         <section id="recent-actions" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Recent Provider Actions</h2>
+            <h2 class="text-2xl font-bold mb-4">Recent Agent Actions</h2>
             
-            <?php if (empty($recent_providers)): ?>
+            <?php if (empty($recent_agents)): ?>
                 <div class="bg-white rounded-lg shadow p-4">
-                    <p class="text-gray-500">No recent provider actions.</p>
+                    <p class="text-gray-500">No recent Agent actions.</p>
                 </div>
             <?php else: ?>
                 <div class="bg-white rounded-lg shadow overflow-x-auto">
@@ -302,19 +302,19 @@ $claim_stats = $result->fetch_assoc();
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($recent_providers as $provider): ?>
+                            <?php foreach ($recent_agents as $agent): ?>
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['full_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['email']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['company_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($provider['region']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['full_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['email']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['company_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['region']); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            <?php echo $provider['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
-                                            <?php echo ucfirst(htmlspecialchars($provider['status'])); ?>
+                                            <?php echo $agent['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
+                                            <?php echo ucfirst(htmlspecialchars($agent['status'])); ?>
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($provider['updated_at'])); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($agent['updated_at'])); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
