@@ -2,18 +2,17 @@
 session_start();
 include('../includes/header.php');
 include('../includes/db_connection.php');
-
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
-
     $sql = "SELECT id, username, password, role FROM users WHERE username = '$username'";
     $result = $conn->query($sql);
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
+        
         if (password_verify($password, $row['password'])) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
@@ -21,10 +20,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($row['role'] == 'user') {
                 header("location: user_dashboard.php");
+                exit();
             } else if ($row['role'] == 'agent') {
-                header("location: agent_dashboard.php");
+                // Check if the agent's status is approved
+                $agent_query = "SELECT status FROM insurance_agents WHERE user_id = ?";
+                $agent_stmt = $conn->prepare($agent_query);
+                $agent_stmt->bind_param("i", $row['id']);
+                $agent_stmt->execute();
+                $agent_result = $agent_stmt->get_result();
+                
+                if ($agent_result->num_rows > 0) {
+                    $agent_row = $agent_result->fetch_assoc();
+                    
+                    if ($agent_row['status'] == 'approved') {
+                        header("location: agent_dashboard.php");
+                        exit();
+                    } else {
+                        $error = "Your account is not approved. Status: " . $agent_row['status'];
+                    }
+                }
+
             } else if ($row['role'] == 'admin') {
                 header("location: admin_dashboard.php");
+                exit();
             }
         } else {
             $error = "Invalid password";
@@ -34,7 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <div class="flex min-h-screen flex-col sm:flex-row bg-slate-200">
     <div class="sm:w-1/2 w-full p-5 flex flex-col justify-center gap-8 items-center relative text-center sm:text-left">
         <div class="sm:absolute relative sm:top-16 sm:left-10 flex flex-col gap-3  ">

@@ -16,49 +16,48 @@ $error_message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && isset($_POST['agent_id'])) {
         $agent_id = mysqli_real_escape_string($conn, $_POST['agent_id']);
-        
+
         if ($_POST['action'] === 'approve') {
             // Update the agent status to approved
             $sql = "UPDATE insurance_agents SET status = 'approved' WHERE id = '$agent_id'";
-            
+
             if ($conn->query($sql) === TRUE) {
                 // Get agent email to send notification
                 $sql = "SELECT p.email, p.full_name, u.id FROM insurance_agents p 
                         JOIN users u ON p.user_id = u.id WHERE p.id = '$agent_id'";
                 $result = $conn->query($sql);
-                
+
                 if ($result && $result->num_rows > 0) {
                     $row = $result->fetch_assoc();
                     $user_id = $row['id'];
-                    
+
                     // Update user role to confirm agent status
                     $update_user = "UPDATE users SET role = 'agent' WHERE id = '$user_id'";
                     $conn->query($update_user);
-                    
+
                     // TODO: Send email notification (you would implement this function)
                     // sendApprovalEmail($row['email'], $row['full_name']);
-                    
+
                     $success_message = "Agent approved successfully.";
                 }
             } else {
                 $error_message = "Error approving agent: " . $conn->error;
             }
-        } 
-        elseif ($_POST['action'] === 'reject') {
+        } elseif ($_POST['action'] === 'reject') {
             // Update the agent status to rejected
             $sql = "UPDATE insurance_agents SET status = 'rejected' WHERE id = '$agent_id'";
-            
+
             if ($conn->query($sql) === TRUE) {
                 // Get agent email to send notification
                 $sql = "SELECT email, full_name FROM insurance_agents WHERE id = '$agent_id'";
                 $result = $conn->query($sql);
-                
+
                 if ($result && $result->num_rows > 0) {
                     $row = $result->fetch_assoc();
-                    
+
                     // TODO: Send email notification
                     // sendRejectionEmail($row['email'], $row['full_name']);
-                    
+
                     $success_message = "Agent rejected successfully.";
                 }
             } else {
@@ -70,31 +69,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Get pending agent applications
 $pending_agents = [];
-$sql = "SELECT p.id, p.user_id, p.full_name, p.email, p.region, p.document_path, p.created_at, 
+$sql = "SELECT p.id, p.user_id, p.full_name, u.email, p.region, p.document_path, p.created_at, 
         c.company_name FROM insurance_agents p 
+        JOIN users u ON p.user_id = u.id 
         LEFT JOIN insurance_companies c ON p.company_id = c.id
         WHERE p.status = 'pending' 
         ORDER BY p.created_at DESC";
+
 $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $pending_agents[] = $row;
-    }
-}
-
-// Get recently approved/rejected agents
-$recent_agents = [];
-$sql = "SELECT p.id, p.full_name, p.email, p.region, p.status, p.updated_at, c.company_name
-        FROM insurance_agents p
-        LEFT JOIN insurance_companies c ON p.company_id = c.id
-        WHERE p.status IN ('approved', 'rejected')
-        ORDER BY p.updated_at DESC LIMIT 10";
-$result = $conn->query($sql);
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $recent_agents[] = $row;
     }
 }
 
@@ -130,9 +116,6 @@ $claim_stats = $result->fetch_assoc();
                 </li>
                 <li class="mb-2">
                     <a href="#pending-agents" class="block p-2 rounded hover:bg-blue-700">Pending Agents</a>
-                </li>
-                <li class="mb-2">
-                    <a href="#recent-actions" class="block p-2 rounded hover:bg-blue-700">Recent Actions</a>
                 </li>
                 <li class="mb-2">
                     <a href="manage_users.php" class="block p-2 rounded hover:bg-blue-700">Manage Users</a>
@@ -223,7 +206,7 @@ $claim_stats = $result->fetch_assoc();
         <!-- Pending Agent Applications -->
         <section id="pending-agents" class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Pending Agent Applications</h2>
-            
+
             <?php if (empty($pending_agents)): ?>
                 <div class="bg-white rounded-lg shadow p-4">
                     <p class="text-gray-500">No pending applications at this time.</p>
@@ -243,7 +226,7 @@ $claim_stats = $result->fetch_assoc();
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($pending_agents as $agents): ?>
+                            <?php foreach ($pending_agents as $agent): ?>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['full_name']); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['email']); ?></td>
@@ -251,14 +234,14 @@ $claim_stats = $result->fetch_assoc();
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['region']); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="<?php echo htmlspecialchars($agent['document_path']); ?>" target="_blank" 
+                                        <a href="<?php echo htmlspecialchars($agent['document_path']); ?>" target="_blank"
                                             class="text-blue-600 hover:text-blue-900">View Document</a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <form method="POST" action="" class="inline">
                                             <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                             <input type="hidden" name="action" value="approve">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to approve this agent?')" 
+                                            <button type="submit" onclick="return confirm('Are you sure you want to approve this agent?')"
                                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-1">
                                                 Approve
                                             </button>
@@ -266,55 +249,12 @@ $claim_stats = $result->fetch_assoc();
                                         <form method="POST" action="" class="inline">
                                             <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                             <input type="hidden" name="action" value="reject">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this agent?')" 
+                                            <button type="submit" onclick="return confirm('Are you sure you want to reject this agent?')"
                                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                                                 Reject
                                             </button>
                                         </form>
                                     </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </section>
-
-        <!-- Recent Agent Actions -->
-        <section id="recent-actions" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4">Recent Agent Actions</h2>
-            
-            <?php if (empty($recent_agents)): ?>
-                <div class="bg-white rounded-lg shadow p-4">
-                    <p class="text-gray-500">No recent Agent actions.</p>
-                </div>
-            <?php else: ?>
-                <div class="bg-white rounded-lg shadow overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Region</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($recent_agents as $agent): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['full_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['email']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['company_name']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['region']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            <?php echo $agent['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
-                                            <?php echo ucfirst(htmlspecialchars($agent['status'])); ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?php echo date('M d, Y', strtotime($agent['updated_at'])); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
