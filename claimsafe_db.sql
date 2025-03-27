@@ -15,11 +15,10 @@ CREATE TABLE IF NOT EXISTS users (
 -- Insurance Companies table
 CREATE TABLE IF NOT EXISTS insurance_companies (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
     company_name VARCHAR(100) NOT NULL,
     contact_email VARCHAR(100) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Service Areas table
