@@ -9,27 +9,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = mysqli_real_escape_string($conn, $_POST['role']);
 
     if ($role == 'victim') {
-        // Process victim registration
         $username = mysqli_real_escape_string($conn, $_POST['username']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
 
-        // Insert into users table
-        $sql = "INSERT INTO users (username, email, password, full_name, role) 
-                VALUES ('$username', '$email', '$password', '$full_name', 'user')";
+        // Check if username or email already exists
+        $check_sql = "SELECT * FROM users WHERE username = '$username' OR email = '$email'";
+        $check_result = $conn->query($check_sql);
 
-        if ($conn->query($sql) === TRUE) {
-            $success = "Registration successful! You can now login.";
+        if ($check_result->num_rows > 0) {
+            $existing_user = $check_result->fetch_assoc();
+            if ($existing_user['username'] == $username) {
+                $error = "Username already taken.";
+            } else {
+                $error = "Account exists for this email.";
+            }
         } else {
-            $error = "Error: " . $sql . "<br>" . $conn->error;
+            // Insert into users table
+            $sql = "INSERT INTO users (username, email, password, full_name, role) 
+                    VALUES ('$username', '$email', '$password', '$full_name', 'user')";
+
+            if ($conn->query($sql) === TRUE) {
+                $success = "Registration successful! You can now login.";
+            } else {
+                $error = "Error: " . $sql . "<br>" . $conn->error;
+            }
         }
     } elseif ($role == 'agent') {
-        // Start transaction for consistent database state
         $conn->begin_transaction();
 
         try {
-            // Process insurance agent registration
             $username = mysqli_real_escape_string($conn, $_POST['username']);
             $email = mysqli_real_escape_string($conn, $_POST['email']);
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -37,77 +47,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $region = mysqli_real_escape_string($conn, $_POST['region']);
             $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
 
-            // 1. First, create the user account
-            $sql = "INSERT INTO users (username, email, password, full_name, role) 
-                    VALUES ('$username', '$email', '$password', '$full_name', 'agent')";
+            // Check if username or email already exists
+            $check_sql = "SELECT * FROM users WHERE username = '$username' OR email = '$email'";
+            $check_result = $conn->query($check_sql);
 
-            if ($conn->query($sql) === TRUE) {
-                $user_id = $conn->insert_id; // Get the new user ID
-
-                // 2. Handle file upload for ID document
-                $document_path = '';
-                if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
-                    $upload_dir = '../uploads/documents/';
-
-                    $filename = time() . '_' . basename($_FILES['document']['name']);
-                    $target_file = $upload_dir . $filename;
-
-                    // Check file type
-                    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-                    $file_type = $_FILES['document']['type'];
-
-                    if (!in_array($file_type, $allowed_types)) {
-                        throw new Exception("Invalid file type. Allowed types: JPEG, PNG, GIF, PDF.");
-                    }
-
-                    if (move_uploaded_file($_FILES['document']['tmp_name'], $target_file)) {
-                        $document_path = $target_file;
-                    } else {
-                        throw new Exception("Error uploading your document. Error code: " . $_FILES['document']['error']);
-                    }
+            if ($check_result->num_rows > 0) {
+                $existing_user = $check_result->fetch_assoc();
+                if ($existing_user['username'] == $username) {
+                    throw new Exception("Username already taken.");
                 } else {
-                    throw new Exception("Document upload is required. Error code: " . ($_FILES['document']['error'] ?? 'No file uploaded'));
+                    throw new Exception("Account exists for this email.");
                 }
-                // 3. Insert into insurance_agents table
-                $sql = "INSERT INTO insurance_agents (user_id, full_name, region, company_id, document_path, status) 
-                VALUES ('$user_id', '$full_name', '$region', '$company_id', '$document_path', 'pending')";
-
-                if ($conn->query($sql) !== TRUE) {
-                    throw new Exception("Error creating agent profile: " . $conn->error);
-                }
-
-                // 4. Send email to admin for review (you'll need to implement this)
-                // notifyAdmin($email, $full_name, $corporation);
-
-                // If everything succeeded, commit the transaction
-                $conn->commit();
-                $success = "Your registration has been submitted for review. You will be notified via email once approved.";
             } else {
-                throw new Exception("Error creating user account: " . $conn->error);
+                $sql = "INSERT INTO users (username, email, password, full_name, role) 
+                        VALUES ('$username', '$email', '$password', '$full_name', 'agent')";
+
+                if ($conn->query($sql) === TRUE) {
+                    $user_id = $conn->insert_id;
+
+                    $document_path = '';
+                    if (isset($_FILES['document']) && $_FILES['document']['error'] == 0) {
+                        $upload_dir = '../uploads/documents/';
+                        $filename = time() . '_' . basename($_FILES['document']['name']);
+                        $target_file = $upload_dir . $filename;
+
+                        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+                        $file_type = $_FILES['document']['type'];
+
+                        if (!in_array($file_type, $allowed_types)) {
+                            throw new Exception("Invalid file type. Allowed types: JPEG, PNG, GIF, PDF.");
+                        }
+
+                        if (move_uploaded_file($_FILES['document']['tmp_name'], $target_file)) {
+                            $document_path = $target_file;
+                        } else {
+                            throw new Exception("Error uploading your document. Error code: " . $_FILES['document']['error']);
+                        }
+                    } else {
+                        throw new Exception("Document upload is required. Error code: " . ($_FILES['document']['error'] ?? 'No file uploaded'));
+                    }
+
+                    $sql = "INSERT INTO insurance_agents (user_id, full_name, region, company_id, document_path, status) 
+                            VALUES ('$user_id', '$full_name', '$region', '$company_id', '$document_path', 'pending')";
+
+                    if ($conn->query($sql) !== TRUE) {
+                        throw new Exception("Error creating agent profile: " . $conn->error);
+                    }
+
+                    $conn->commit();
+                    $success = "Your registration has been submitted for review. You will be notified via email once approved.";
+                } else {
+                    throw new Exception("Error creating user account: " . $conn->error);
+                }
             }
         } catch (Exception $e) {
-            // Roll back the transaction if something failed
             $conn->rollback();
             $error = $e->getMessage();
         }
     }
-    /*if ($role == 'admin') {
-        // Process victim registration
-        $username = mysqli_real_escape_string($conn, $_POST['username']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-        
-        // Insert into users table
-        $sql = "INSERT INTO users (username, email, password, full_name, role) 
-                VALUES ('$username', '$email', '$password', '$full_name', 'admin')";
-                
-        if ($conn->query($sql) === TRUE) {
-            $success = "Registration successful! You can now login.";
-        } else {
-            $error = "Error: " . $sql . "<br>" . $conn->error;
-        }
-    }*/
 }
 
 // Get list of Indian states for the dropdown
@@ -194,12 +191,6 @@ if ($result && $result->num_rows > 0) {
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
                             Insurance Agent
                         </button>
-                        <!--
-                       <button type="button" id="admin-btn" 
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
-                            Admin
-                        </button>
-            -->
                     </div>
                 </div>
 
@@ -338,10 +329,6 @@ if ($result && $result->num_rows > 0) {
                         document.getElementById('role-selection-form').classList.add('hidden');
                         document.getElementById('victim-form').classList.remove('hidden');
                     });
-                    /*document.getElementById('admin-btn').addEventListener('click', function() {
-                        document.getElementById('role-selection-form').classList.add('hidden');
-                        document.getElementById('victim-form').classList.remove('hidden');
-                    });*/
                     document.getElementById('agent-btn').addEventListener('click', function() {
                         document.getElementById('role-selection-form').classList.add('hidden');
                         document.getElementById('agent-form').classList.remove('hidden');
