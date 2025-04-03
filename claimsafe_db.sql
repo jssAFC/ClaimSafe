@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS service_areas (
     UNIQUE KEY (insurance_company_id, state_name)
 );
 
--- Accidents table
-CREATE TABLE IF NOT EXISTSaccidents (
+-- Accidents table (Fixed syntax error)
+CREATE TABLE IF NOT EXISTS accidents (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     location VARCHAR(255) NOT NULL,
@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTSaccidents (
     accident_date DATE NOT NULL,
     description TEXT NOT NULL,
     photo_path VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Insurance Agents table
@@ -58,16 +59,17 @@ CREATE TABLE IF NOT EXISTS insurance_agents (
     FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE SET NULL
 );
 
--- Claims table
+-- Claims table (Fixed company_id NULL constraint)
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accident_id INT NOT NULL,
-    company_id INT NOT NULL,
+    company_id INT DEFAULT NULL,
     agent_id INT DEFAULT NULL,
     status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accident_id) REFERENCES accidents(id) ON DELETE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE CASCADE
+    FOREIGN KEY (company_id) REFERENCES insurance_companies(id) ON DELETE SET NULL,
+    FOREIGN KEY (agent_id) REFERENCES insurance_agents(id) ON DELETE SET NULL
 );
 
 -- Messages table
