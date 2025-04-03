@@ -31,15 +31,17 @@ CREATE TABLE IF NOT EXISTS service_areas (
 );
 
 -- Accidents table
-CREATE TABLE IF NOT EXISTS accidents (
+CREATE TABLE IF NOT EXISTSaccidents (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT NOT NULL,
     location VARCHAR(255) NOT NULL,
+    latitude DECIMAL(10, 6) NOT NULL,
+    longitude DECIMAL(10, 6) NOT NULL,
+    address TEXT NOT NULL,
     accident_date DATE NOT NULL,
     description TEXT NOT NULL,
     photo_path VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insurance Agents table
