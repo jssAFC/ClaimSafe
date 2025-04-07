@@ -1,6 +1,6 @@
 <?php include('includes/header.php'); ?>
 
-  <body class="max-w-screen h-auto bg-white">
+  <!-- <body > -->
     <!-- -----------Nav bar------------- -->
 
     <!-- PC -->
@@ -15,16 +15,16 @@
           ClaimSafe
         </h1>
         <ul class="flex gap-[1rem] items-center font-semibold">
-          <li class="hover:text-purple-700"><a href="">Home</a></li>
-          <li class="hover:text-purple-700"><a href="">Claims</a></li>
-          <li class="hover:text-purple-700"><a href="">FAQs</a></li>
-          <li class="hover:text-purple-700"><a href="">About Us</a></li>
+          <li class="hover:text-purple-700"><a href="#home">Home</a></li>
+          <li class="hover:text-purple-700"><a href="#aboutUs">About Us</a></li>
+          <li class="hover:text-purple-700"><a href="#procedure">Procedure</a></li>
+          <li class="hover:text-purple-700"><a href="#faq">FAQs</a></li>
         </ul>
       </div>
 
       <div class="flex items-center gap-4 justify-center">
         <a
-          href=""
+          href="./pages/login.php" target="_blank"
           class="text-sm bg-purple-800 text-white p-2 rounded-2xl font-bold"
           >Log In/Sign Up</a
         >
@@ -79,7 +79,7 @@
 
       <div class="flex hover:text-purple-700 items-center gap-4 justify-center">
         <a
-          href=""
+          href="./pages/login.php" target="_blank"
           class="text-xs bg-purple-800 text-white p-2 rounded-2xl font-bold"
           >Log In/Sign Up</a
         >
@@ -102,7 +102,7 @@
     </nav>
 
     <!-- Main content -->
-    <main class="pt-24">
+    <main class="pt-24" id="home">
       <h1 class="text-2xl md:text-4xl font-bold text-center mt-5 p-4 pb-8">
         Accident Insaurence Within Minutes
       </h1>
@@ -170,9 +170,9 @@
       </div>
 
       <!-- car insaurence -->
-      <div class="bg-gray-200 max-w-full my-8 p-4">
+      <div class="bg-gray-200 max-w-full my-8 p-4" id="aboutUs">
         <h2 class="font-bold text-center text-xl p-8 max-md:p-4 md:text-3xl">
-          Car Insurance
+          About Us
         </h2>
         <div
           class="flex max-md:flex-col justify-around items-center p-4 gap-[10%]"
@@ -190,8 +190,7 @@
             potential damage, loss, theft, and other misfortunes, and replacing
             or repairing your car comes with a hefty price tag. Investing in a
             car insurance policy is one of the ways you can protect your vehicle
-            financially. Continue reading to learn everything you need to know
-            about a car insurance policy.
+            financially. This is what ClaimSafe is all about.
           </p>
         </div>
       </div>
@@ -537,7 +536,7 @@
 
       <!-- How to buy online-->
 
-      <div class="w-full p-4">
+      <div class="w-full p-4" id="procedure">
         <h2 class="text-xl md:text-3xl text-center p-4 font-bold">
           How To Register Yourself Online
         </h2>
@@ -600,11 +599,12 @@
         </div>
       </div>
 
-      <div class="w-full bg-gray-200 p-4 pb-16">
+      <div class="w-full bg-gray-200 p-4 pb-16" id="faq">
         <h1 class="text-xl md:text-3xl text-center font-bold p-4 md:pt-8 ">FAQs</h1>
         <!-- Questions -->
          <!-- q1 -->
          <div class="w-[95%] mx-auto flex justify-between items-center cursor-pointer p-2 " onclick="toggleAnswer(this)">
+          
           <p class="text-md md:text-xl font-semibold ">What does accident insurance typically cover?</p>
           <button id="toggle-btn" class="bg-purple-500  p-1 rounded-full min-w-8 min-h-8 flex justify-center items-center text-white font-bold ">+</button>
          </div>
