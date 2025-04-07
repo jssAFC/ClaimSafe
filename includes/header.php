@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accident Insurance Resolution</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="max-w-screen h-auto bg-white">

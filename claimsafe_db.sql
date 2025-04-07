@@ -63,7 +63,11 @@ CREATE TABLE IF NOT EXISTS insurance_agents (
 CREATE TABLE IF NOT EXISTS claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
     accident_id INT NOT NULL,
+<<<<<<< HEAD
     company_id INT DEFAULT NULL,
+=======
+    company_id INT NOT NULL,
+>>>>>>> 4c1dae0 (Landing Page Done)
     agent_id INT DEFAULT NULL,
     status ENUM('new', 'in_progress', 'resolved') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
