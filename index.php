@@ -97,11 +97,7 @@
 
 </nav>
 
-<!-- Main content -->
-<main class="pt-24" id="home">
-  <h1 class="text-2xl md:text-4xl font-bold text-center mt-5 p-4 pb-8">
-    Accident Insaurence Within Minutes
-  </h1>
+
 <!-- Main content -->
 <main class="pt-24" id="home">
   <h1 class="text-2xl md:text-4xl font-bold text-center mt-5 p-4 pb-8">
