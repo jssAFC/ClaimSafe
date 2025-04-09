@@ -158,6 +158,8 @@ if ($result && $result->num_rows > 0) {
 }
 ?>
 
+<?php include('../includes/header.php'); ?>
+
 <div class="flex min-h-screen bg-gray-100">
     <div class="container mx-auto px-4 py-8">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
