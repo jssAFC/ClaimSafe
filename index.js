@@ -1,88 +1,14 @@
 //  Function for dropdown menu
+function showSidebar(){
+  const sidebar=document.querySelector('.sidebar');
+  sidebar.classList.remove('hidden');
+  const body=document.querySelector('body');
+  body.classList.add('bg-white/40');
+}
 
-function createDropdown() {
-  const dropdown_div = document.createElement("div");
-  const ul = document.createElement("ul");
-  const li1 = document.createElement("li");
-  const li2 = document.createElement("li");
-  const li3 = document.createElement("li");
-  const li4 = document.createElement("li");
-
-  li1.innerHTML = `<a href="#home"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline">
-<path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-</svg>Home</a>
-`;
-  li2.innerHTML = `<a href="https://heroicons.com/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline">
-<path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-</svg>About</a>
-`;
-  li3.innerHTML = `<a href="https://heroicons.com/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline">
-<path Claims-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-</svg>Home</a>
-`;
-  li4.innerHTML = `<a href="https://heroicons.com/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline">
-<path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-</svg>FAQs</a>
-`;
-
-  const listArray = [li1, li2, li3, li4];
-  for (let i = 0; i < listArray.length; i++) {
-    listArray[i].classList.add("hover:text-purple-700");
-  }
-
-  const hr = document.createElement("hr");
-  hr.classList.add("text-gray-100");
-  const hr1 = document.createElement("hr");
-  const hr2 = document.createElement("hr");
-  const hr3 = document.createElement("hr");
-  const hr4 = document.createElement("hr");
-  hr1.classList.add("border-t-2", "border-gray-200");
-  hr2.classList.add("border-t-2", "text-gray-100");
-  hr3.classList.add("border-t-2", "text-gray-100");
-  hr4.classList.add("border-t-2", "text-gray-100");
-  ul.append(li1, hr1, li2, hr2, li3, hr3, li4, hr4);
-
-  const name = document.createElement("h1");
-  name.textContent = "ClaimSafe";
-  name.classList.add(
-    "inline-block",
-    "text-purple-700",
-    "text-2xl",
-    "font-extrabold",
-    "font-sans"
-  );
-
-  const overlay = document.createElement("div");
-  overlay.classList.add(
-    "fixed",
-    "inset-0",
-    "bg-black",
-    "opacity-30",
-    "z-10",
-    "md:hidden"
-  );
-
-  ul.classList.add("mt-6");
-  dropdown_div.classList.add(
-    "absolute",
-    "w-[40vw]",
-    "min-h-screen",
-    "left-0",
-    "top-0",
-    "bg-white",
-    "text-lg",
-    "p-4",
-    "z-20",
-    "md:hidden"
-  );
-  dropdown_div.append(name, ul);
-  const body = document.querySelector("body");
-  body.append(overlay, dropdown_div);
-
-  overlay.addEventListener("click", () => {
-    overlay.remove();
-    dropdown_div.remove();
-  });
+function hideSidebar(){
+  const sidebar=document.querySelector('.sidebar');
+  sidebar.classList.add('hidden')
 }
 
 //  Function for sliding cards

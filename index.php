@@ -1,4 +1,10 @@
 <?php include('includes/header.php'); ?>
+
+<!-- <body > -->
+<!-- -----------Nav bar------------- -->
+
+<!-- PC -->
+
 <nav
   class="bg-white h-16 flex items-center px-[5vw] shadow-md justify-between max-md:hidden fixed left-0 right-0 top-0 z-40">
   <div class="max-w-1/2 flex gap-10">
@@ -17,8 +23,8 @@
   <div class="flex items-center gap-4 justify-center">
     <a
       href="./pages/login.php" target="_blank"
-      class="text-sm bg-purple-800 text-white p-2 rounded-2xl font-bold">Log In/Sign Up</a>
-    <a href="" class="flex items-center gap-1 hover:text-purple-700">
+      class="text-sm bg-purple-600 text-white p-2 rounded-2xl font-bold">Log In/Sign Up</a>
+    <a href="https://claimsafe.onrender.com" class="flex items-center gap-1 hover:text-purple-700">
       <p class="font-semibold text-sm">Need Help</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -37,49 +43,60 @@
 </nav>
 
 <!-- Mobile -->
-<nav
-  class="min-w-max bg-white h-16 flex items-center px-[3vw] shadow-md justify-between md:hidden fixed left-0 right-0 top-0 z-40">
-  <div class="max-w-1/2 flex gap-4 items-center relative">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      id="hamburger"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="size-6"
-      onclick="createDropdown()">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-    </svg>
+<nav class="bg-white h-16 flex px-[5vw] shadow-lg md:hidden justify-between items-center fixed top-0 right-0 left-0 z-40">
 
-    <h1
-      class="inline-block text-purple-700 text-xl font-extrabold font-sans">
-      ClaimSafe
-    </h1>
+  <!-- Hamburger -->
+  <li class=" list-none" onclick="showSidebar()">
+
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+      </svg>
+
+  </li>
+
+  <!-- Heading -->
+  <h1
+    class=" text-purple-700 text-2xl font-extrabold font-sans text-center mx-auto">
+    ClaimSafe
+  </h1>
+
+  <!-- sidebar -->
+
+  <div class="fixed top-0 left-0 h-[100vh] w-[200px] z-50 flex flex-col items-start justify-start md:hidden list-none p-4 bg-white shadow-2xl sidebar hidden">
+    <li class="self-end" onclick="hideSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    </li>
+    <li class="w-full border-b-2 border-gray-300 px-1"><a class="w-full hover:bg-white" href="#">Home</a></li>
+    <li class="w-full border-b-2 border-gray-300 px-1"><a class="w-full hover:bg-white" href="#aboutUs">About</a></li>
+    <li class="w-full border-b-2 border-gray-300 px-1"><a class="w-full hover:bg-white" href="#procedure">Procedure</a></li>
+    <li class="w-full border-b-2 border-gray-300 px-1"><a class="w-full hover:bg-white" href="#faq">FAQs</a></li>
+    <li class="w-full border-b-2 border-gray-300 px-1"><a href="https://claimsafe.onrender.com/" class="flex items-center gap-1 w-full hover:text-purple-700">
+        <p>Support</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5 text-white">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+        </svg>
+      </a></li>
+    <br><br>
+    <li><a
+        href="./pages/login.php" target="_blank"
+        class="text-sm bg-purple-600 text-white  min-w-28 rounded-md p-2 px-3 font-medium text-center">Log In/Sign-Up</a>
+    </li>
+
   </div>
 
-  <div class="flex hover:text-purple-700 items-center gap-4 justify-center">
-    <a
-      href="./pages/login.php" target="_blank"
-      class="text-xs bg-purple-800 text-white p-2 rounded-2xl font-bold">Log In/Sign Up</a>
-    <a href="">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-      </svg></a>
-  </div>
 </nav>
+
 
 <!-- Main content -->
 <main class="pt-24" id="home">
@@ -152,7 +169,7 @@
       <img
         src="./assets/aggrement-image.webp"
         alt=""
-        class="w-3/4 max-sm:h-36 h-44 object-fit relative left-6" />
+        class="w-3/4 max-sm:h-36 h-44 object-fit relative left-6 " />
       <p class="p-4 text-sm font-sans text-wrap sm:text-base text-justify">
         Whether you have to commute to work or need a vehicle to get around
         the city, having a car is a dream come true. With a car to your
