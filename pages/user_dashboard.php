@@ -15,46 +15,41 @@ $sql = "SELECT * FROM accidents WHERE user_id = $user_id ORDER BY created_at DES
 $result = $conn->query($sql);
 ?>
 
-<div class="flex min-h-screen bg-gray-100">
+<div class="flex min-h-screen bg-purple-50">
     <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">User Dashboard</h1>
-            <div>
-                <a href="report_accident.php" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Report New Accident
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <h1 class="text-3xl font-bold text-purple-800">User Dashboard</h1>
+            <div class="flex gap-4">
+                <a href="report_accident.php"
+                   class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">
+                    🚨 Report Accident
                 </a>
-                <a href="logout.php" class="ml-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                    Logout
+                <a href="logout.php"
+                   class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">
+                    🔒 Logout
                 </a>
             </div>
         </div>
-        
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-4">Your Accident Reports</h2>
-            
+
+        <!-- Report Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-6">
+            <h2 class="text-2xl font-semibold text-purple-700 mb-4">Your Accident Reports</h2>
+
             <?php if ($result->num_rows > 0): ?>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white">
+                    <table class="min-w-full text-sm text-gray-700">
                         <thead>
-                            <tr>
-                                <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </th>
-                                <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Location
-                                </th>
-                                <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th class="py-3 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
+                            <tr class="bg-purple-100 text-purple-700 uppercase text-xs">
+                                <th class="py-3 px-4 text-left">Date</th>
+                                <th class="py-3 px-4 text-left">Location</th>
+                                <th class="py-3 px-4 text-left">Status</th>
+                                <th class="py-3 px-4 text-left">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while($row = $result->fetch_assoc()): ?>
                                 <?php
-                                // Get claim status
                                 $accident_id = $row['id'];
                                 $claim_sql = "SELECT status FROM claims WHERE accident_id = $accident_id";
                                 $claim_result = $conn->query($claim_sql);
@@ -64,18 +59,20 @@ $result = $conn->query($sql);
                                     $status = ucfirst($claim_row['status']);
                                 }
                                 ?>
-                                <tr>
+                                <tr class="hover:bg-purple-50 transition">
+                                    <td class="py-4 px-4 border-b border-gray-200"><?php echo $row['accident_date']; ?></td>
+                                    <td class="py-4 px-4 border-b border-gray-200"><?php echo $row['location']; ?></td>
                                     <td class="py-4 px-4 border-b border-gray-200">
-                                        <?php echo $row['accident_date']; ?>
+                                        <span class="inline-block px-3 py-1 text-xs rounded-full font-medium
+                                            <?php echo $status === 'Approved' ? 'bg-green-100 text-green-700' : 
+                                                        ($status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 
+                                                        ($status === 'Rejected' ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-600')); ?>">
+                                            <?php echo $status; ?>
+                                        </span>
                                     </td>
                                     <td class="py-4 px-4 border-b border-gray-200">
-                                        <?php echo $row['location']; ?>
-                                    </td>
-                                    <td class="py-4 px-4 border-b border-gray-200">
-                                        <?php echo $status; ?>
-                                    </td>
-                                    <td class="py-4 px-4 border-b border-gray-200">
-                                        <a href="view_accident.php?id=<?php echo $row['id']; ?>" class="text-blue-500 hover:text-blue-700">
+                                        <a href="view_accident.php?id=<?php echo $row['id']; ?>"
+                                           class="text-purple-600 hover:text-purple-800 font-medium transition">
                                             View Details
                                         </a>
                                     </td>
@@ -85,10 +82,11 @@ $result = $conn->query($sql);
                     </table>
                 </div>
             <?php else: ?>
-                <p class="text-gray-500">You haven't reported any accidents yet.</p>
+                <p class="text-gray-500 text-center mt-6">You haven't reported any accidents yet. 📝</p>
             <?php endif; ?>
         </div>
     </div>
 </div>
+
 
 <?php include('../includes/footer.php'); ?>
