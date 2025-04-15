@@ -160,38 +160,40 @@ if ($result && $result->num_rows > 0) {
 
 <?php include('../includes/header.php'); ?>
 
-<div class="flex min-h-screen bg-gray-100">
+<div class="flex min-h-screen items-center bg-purple-50">
     <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
-            <h1 class="text-2xl font-bold mb-4">Register</h1>
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto border-t-4 border-purple-600">
+            <h1 class="text-2xl font-bold mb-4 text-purple-800">Register Your Account</h1>
 
             <?php if ($error): ?>
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 shadow">
                     <?php echo $error; ?>
                 </div>
             <?php endif; ?>
 
             <?php if ($success): ?>
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-4 shadow">
                     <?php echo $success; ?>
                     <?php if (strpos($success, "You can now login") !== false): ?>
-                        <p><a href="login.php" class="text-blue-500 underline">Login here</a></p>
+                        <p class="mt-2"><a href="login.php" class="text-purple-600 font-medium hover:text-purple-800 underline transition duration-300">Login here</a></p>
                     <?php endif; ?>
                 </div>
             <?php else: ?>
                 <!-- Initial role selection form -->
                 <div id="role-selection-form" class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-4">
                         I am registering as:
                     </label>
-                    <div class="flex space-x-4 mb-4">
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-4">
                         <button type="button" id="victim-btn"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
-                            Accident Victim
+                            class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 flex-1 shadow-md">
+                            <span class="block text-lg">Accident Victim</span>
+                            <span class="block text-xs mt-1 text-purple-200">I need to file a claim</span>
                         </button>
                         <button type="button" id="agent-btn"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1">
-                            Insurance Agent
+                            class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:-translate-y-1 flex-1 shadow-md">
+                            <span class="block text-lg">Insurance Agent</span>
+                            <span class="block text-xs mt-1 text-purple-200">I process claims</span>
                         </button>
                     </div>
                 </div>
@@ -199,45 +201,45 @@ if ($result && $result->num_rows > 0) {
                 <!-- Victim registration form (initially hidden) -->
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="victim-form" class="hidden" enctype="multipart/form-data">
                     <input type="hidden" name="role" value="victim">
-
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="full_name">
+                    
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="full_name">
                             Full Name
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="full_name" name="full_name" type="text" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="full_name" name="full_name" type="text" placeholder="John Doe" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="email">
                             Email
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email" name="email" type="email" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="email" name="email" type="email" placeholder="john@example.com" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="username">
                             Username
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username" name="username" type="text" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="username" name="username" type="text" placeholder="johndoe" required>
                     </div>
 
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="password">
                             Password
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="password" name="password" type="password" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="password" name="password" type="password" placeholder="••••••••" required>
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                        <button class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 shadow-md hover:shadow-lg"
                             type="submit">
-                            Register
+                            Register Now
                         </button>
-                        <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="login.php">
+                        <a class="inline-block align-baseline font-bold text-sm text-purple-600 hover:text-purple-800 transition duration-300" href="login.php">
                             Already have an account?
                         </a>
                     </div>
@@ -247,79 +249,91 @@ if ($result && $result->num_rows > 0) {
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="agent-form" class="hidden" enctype="multipart/form-data">
                     <input type="hidden" name="role" value="agent">
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="agent_full_name">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="agent_full_name">
                             Full Name
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="agent_full_name" name="full_name" type="text" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="agent_full_name" name="full_name" type="text" placeholder="Jane Smith" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="agent_email">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="agent_email">
                             Email
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="agent_email" name="email" type="email" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="agent_email" name="email" type="email" placeholder="jane@insurance.com" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="region">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="region">
                             Region
                         </label>
-                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <select class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
                             id="region" name="region" required>
-                            <option value="">Select a state</option>
+                            <option value="">Select your state</option>
                             <?php foreach ($states as $state): ?>
                                 <option value="<?php echo $state; ?>"><?php echo $state; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="company_id">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="company_id">
                             Insurance Company
                         </label>
-                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <select class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
                             id="company_id" name="company_id" required>
-                            <option value="">Select an insurance company</option>
+                            <option value="">Select your company</option>
                             <?php foreach ($insurance_companies as $id => $name): ?>
                                 <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="document">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="document">
                             ID Document
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="document" name="document" type="file" accept="image/*,.pdf" required>
-                        <p class="text-sm text-gray-500 mt-1">Please upload a valid ID proof (image or PDF).</p>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-purple-300 border-dashed rounded-lg">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-purple-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="document" class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500">
+                                        <span>Upload a file</span>
+                                        <input id="document" name="document" type="file" class="sr-only" accept="image/*,.pdf" required>
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs text-gray-500">Valid ID proof (image or PDF)</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="agent_username">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="agent_username">
                             Username
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="agent_username" name="username" type="text" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="agent_username" name="username" type="text" placeholder="agentjane" required>
                     </div>
 
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="agent_password">
+                    <div class="mb-6 relative">
+                        <label class="block text-purple-700 text-sm font-bold mb-2" for="agent_password">
                             Password
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="agent_password" name="password" type="password" required>
+                        <input class="shadow appearance-none border border-purple-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-purple-500 focus:ring-2 focus:ring-purple-300"
+                            id="agent_password" name="password" type="password" placeholder="••••••••" required>
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                        <button class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 shadow-md hover:shadow-lg"
                             type="submit">
                             Submit for Review
                         </button>
-                        <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="login.php">
+                        <a class="inline-block align-baseline font-bold text-sm text-purple-600 hover:text-purple-800 transition duration-300" href="login.php">
                             Already have an account?
                         </a>
                     </div>
@@ -335,6 +349,28 @@ if ($result && $result->num_rows > 0) {
                         document.getElementById('role-selection-form').classList.add('hidden');
                         document.getElementById('agent-form').classList.remove('hidden');
                     });
+
+                    // Back button functionality
+                    function createBackButton() {
+                        const backBtn = document.createElement('button');
+                        backBtn.textContent = 'Back to Selection';
+                        backBtn.className = 'mt-4 text-purple-600 hover:text-purple-800 text-sm font-medium focus:outline-none transition duration-300';
+                        backBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.getElementById('victim-form').classList.add('hidden');
+                            document.getElementById('agent-form').classList.add('hidden');
+                            document.getElementById('role-selection-form').classList.remove('hidden');
+                        });
+                        
+                        // Insert back buttons
+                        const victimForm = document.getElementById('victim-form');
+                        const agentForm = document.getElementById('agent-form');
+                        victimForm.appendChild(backBtn.cloneNode(true));
+                        agentForm.appendChild(backBtn);
+                    }
+                    
+                    // Create back buttons when the page loads
+                    document.addEventListener('DOMContentLoaded', createBackButton);
                 </script>
             <?php endif; ?>
         </div>
