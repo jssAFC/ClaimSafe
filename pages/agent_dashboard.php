@@ -138,16 +138,6 @@ $claims_result = $stmt->get_result();
                         </a>
                     </li>
                     <li class="mb-2 mt-8">
-                        <a href="agent_profile.php" class="block p-3 rounded hover:bg-purple-700 transition duration-300">
-                            My Profile
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="reports.php" class="block p-3 rounded hover:bg-purple-700 transition duration-300">
-                            Reports
-                        </a>
-                    </li>
-                    <li class="mb-2 mt-8">
                         <a href="logout.php" class="block p-3 rounded bg-purple-600 hover:bg-purple-700 text-center transition duration-300">
                             Logout
                         </a>
@@ -244,6 +234,7 @@ $claims_result = $stmt->get_result();
                                                     <select name="status" class="border border-purple-300 rounded px-2 py-1 focus:ring-2 focus:ring-purple-300 focus:border-purple-500 focus:outline-none">
                                                         <option value="in_progress" <?php if ($row['status'] == 'in_progress') echo 'selected'; ?>>In Progress</option>
                                                         <option value="resolved" <?php if ($row['status'] == 'resolved') echo 'selected'; ?>>Resolved</option>
+                                                        <option value="in_progress" <?php if ($row['status'] == 'in_progress') echo 'selected'; ?>>Rejected</option>
                                                     </select>
                                                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded shadow transition duration-300">
                                                         Update
