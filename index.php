@@ -101,9 +101,10 @@
 <!-- Main content -->
 <main class="pt-24" id="home">
   <h1 class="text-2xl md:text-4xl font-bold text-center mt-5 p-4 pb-8">
-    Accident Insaurence Within Minutes
+    Accident Insurance Within Minutes
   </h1>
-
+<!-- Accident information -->
+ 
   <!-- statistics -->
   <div
     class="w-[95vw] h-auto bg-purple-200 p-4 mx-auto rounded-xl flex justify-around mt-5 border-r-2">
@@ -159,7 +160,7 @@
     </div>
   </div>
 
-  <!-- car insaurence -->
+  <!-- car insurance -->
   <div class="bg-gray-200 max-w-full my-8 p-4" id="aboutUs">
     <h2 class="font-bold text-center text-xl p-8 max-md:p-4 md:text-3xl">
       About Us
@@ -183,7 +184,7 @@
     </div>
   </div>
 
-  <!-- What is car insaurence -->
+  <!-- What is car insurance -->
   <div class="bg-white max-w-full my-8 p-4">
     <h2 class="font-bold text-center text-xl p-4 md:text-3xl max-md:p-0">
       What is Car Insurance
@@ -212,10 +213,10 @@
     </div>
   </div>
 
-  <!-- Different types of car insaurence -->
+  <!-- Different types of car insurance -->
   <div class="bg-gray-200 max-w-full my-8 p-4 md:p-8">
     <h2 class="font-bold text-center text-xl p-4 md:text-3xl">
-      Different Types of Accidental Insaurence
+      Different Types of Accidental Insurance
     </h2>
     <div
       class="flex max-sm:flex-col justify-around items-center p-4 gap-[10%]">
@@ -226,7 +227,7 @@
       <div
         class="w-[90%] h-96 sm:h-64 p-4 mx-6 rounded-xl shadow-lg bg-gray-100 relative">
         <h3 class="font-bold py-4 md:text-2xl" id="card-heading">
-          Comprehensive Car Insaurence
+          Comprehensive Car Insurance
         </h3>
         <p class="leading-relaxed font-normal" id="card-text">
           This is the most extensive coverage, offering proper protection
@@ -347,7 +348,7 @@
     </div>
   </div>
 
-  <!-- what covered inside insaurence -->
+  <!-- what covered inside insurance -->
   <div class="w-full bg-gray-200 p-4">
     <h3 class="text-xl md:text-3xl font-black text-center p-4 md:py-8">
       Whats covered inside the ClaimSafe Policy
