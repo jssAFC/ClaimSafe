@@ -105,29 +105,61 @@ $result = $conn->query($sql);
 $claim_stats = $result->fetch_assoc();
 ?>
 
-<div class="flex flex-col lg:flex-row min-h-screen bg-purple-50">
+<div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
     <!-- Sidebar -->
-    <div class="lg:w-64 w-full bg-purple-800 text-white p-4">
-        <div class="text-xl font-bold mb-8">Admin Dashboard</div>
+    <div class="lg:w-64 w-full bg-gray-800 text-white p-4">
+        <div class="text-xl font-bold mb-8 flex items-center">
+            <span class="text-blue-400 mr-2">●</span> Admin Dashboard
+        </div>
         <nav>
             <ul>
                 <li class="mb-2">
-                    <a href="#dashboard" class="block p-2 rounded hover:bg-purple-700 transition duration-300">Dashboard</a>
+                    <a href="#dashboard" class="block p-2 rounded hover:bg-gray-700 transition duration-300 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        Dashboard
+                    </a>
                 </li>
                 <li class="mb-2">
-                    <a href="#pending-agents" class="block p-2 rounded hover:bg-purple-700 transition duration-300">Pending Agents</a>
+                    <a href="#pending-agents" class="block p-2 rounded hover:bg-gray-700 transition duration-300 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Pending Agents
+                    </a>
                 </li>
                 <li class="mb-2">
-                    <a href="manage_users.php" class="block p-2 rounded hover:bg-purple-700 transition duration-300">Manage Users</a>
+                    <a href="manage_users.php" class="block p-2 rounded hover:bg-gray-700 transition duration-300 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        Manage Users
+                    </a>
                 </li>
                 <li class="mb-2">
-                    <a href="manage_companies.php" class="block p-2 rounded hover:bg-purple-700 transition duration-300">Manage Companies</a>
+                    <a href="manage_companies.php" class="block p-2 rounded hover:bg-gray-700 transition duration-300 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        Manage Companies
+                    </a>
                 </li>
                 <li class="mb-2">
-                    <a href="system_logs.php" class="block p-2 rounded hover:bg-purple-700 transition duration-300">System Logs</a>
+                    <a href="system_logs.php" class="block p-2 rounded hover:bg-gray-700 transition duration-300 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        System Logs
+                    </a>
                 </li>
                 <li class="mb-2 mt-8">
-                    <a href="logout.php" class="block p-2 rounded bg-purple-600 hover:bg-purple-700 text-center transition duration-300">Logout</a>
+                    <a href="logout.php" class="block p-2 rounded bg-red-600 hover:bg-red-700 text-center transition duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </a>
                 </li>
             </ul>
         </nav>
@@ -136,67 +168,110 @@ $claim_stats = $result->fetch_assoc();
     <!-- Main Content -->
     <div class="flex-1 p-4 md:p-8">
         <?php if ($success_message): ?>
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-4 shadow">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-4 shadow-sm">
                 <?php echo $success_message; ?>
             </div>
         <?php endif; ?>
 
         <?php if ($error_message): ?>
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 shadow">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 shadow-sm">
                 <?php echo $error_message; ?>
             </div>
         <?php endif; ?>
 
         <!-- Dashboard Overview -->
         <section id="dashboard" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4 text-purple-800">Dashboard Overview</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Dashboard Overview</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- User Stats -->
-                <div class="bg-white rounded-lg shadow p-4 border-t-4 border-purple-600">
-                    <h3 class="font-bold text-purple-700 mb-2">Users</h3>
-                    <div class="text-3xl font-bold text-purple-600">
+                <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">Users</h3>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-800">
                         <?php echo array_sum($user_stats); ?>
                     </div>
-                    <div class="text-sm text-gray-500 mt-2">
-                        Victims: <?php echo isset($user_stats['user']) ? $user_stats['user'] : 0; ?><br>
-                        Agent: <?php echo isset($user_stats['agent']) ? $user_stats['agent'] : 0; ?><br>
-                        Admins: <?php echo isset($user_stats['admin']) ? $user_stats['admin'] : 0; ?>
+                    <div class="text-sm text-gray-600 mt-2">
+                        <div class="flex justify-between mb-1">
+                            <span>Victims:</span>
+                            <span class="font-medium"><?php echo isset($user_stats['user']) ? $user_stats['user'] : 0; ?></span>
+                        </div>
+                        <div class="flex justify-between mb-1">
+                            <span>Agent:</span>
+                            <span class="font-medium"><?php echo isset($user_stats['agent']) ? $user_stats['agent'] : 0; ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Admins:</span>
+                            <span class="font-medium"><?php echo isset($user_stats['admin']) ? $user_stats['admin'] : 0; ?></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Agent Applications -->
-                <div class="bg-white rounded-lg shadow p-4 border-t-4 border-purple-600">
-                    <h3 class="font-bold text-purple-700 mb-2">Pending Agents</h3>
-                    <div class="text-3xl font-bold text-purple-600">
+                <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">Pending Agents</h3>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-800">
                         <?php echo count($pending_agents); ?>
                     </div>
-                    <div class="text-sm text-gray-500 mt-2">
+                    <div class="text-sm text-gray-600 mt-2">
                         Applications awaiting review
                     </div>
                 </div>
 
                 <!-- Claims -->
-                <div class="bg-white rounded-lg shadow p-4 border-t-4 border-purple-600">
-                    <h3 class="font-bold text-purple-700 mb-2">Claims</h3>
-                    <div class="text-3xl font-bold text-purple-600">
+                <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">Claims</h3>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-800">
                         <?php echo isset($claim_stats['total_claims']) ? $claim_stats['total_claims'] : 0; ?>
                     </div>
-                    <div class="text-sm text-gray-500 mt-2">
-                        Approved: <?php echo isset($claim_stats['approved_claims']) ? $claim_stats['approved_claims'] : 0; ?><br>
-                        Pending: <?php echo isset($claim_stats['pending_claims']) ? $claim_stats['pending_claims'] : 0; ?><br>
-                        Rejected: <?php echo isset($claim_stats['rejected_claims']) ? $claim_stats['rejected_claims'] : 0; ?>
+                    <div class="text-sm text-gray-600 mt-2">
+                        <div class="flex justify-between mb-1">
+                            <span>Approved:</span>
+                            <span class="font-medium"><?php echo isset($claim_stats['approved_claims']) ? $claim_stats['approved_claims'] : 0; ?></span>
+                        </div>
+                        <div class="flex justify-between mb-1">
+                            <span>Pending:</span>
+                            <span class="font-medium"><?php echo isset($claim_stats['pending_claims']) ? $claim_stats['pending_claims'] : 0; ?></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Rejected:</span>
+                            <span class="font-medium"><?php echo isset($claim_stats['rejected_claims']) ? $claim_stats['rejected_claims'] : 0; ?></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-lg shadow p-4 border-t-4 border-purple-600">
-                    <h3 class="font-bold text-purple-700 mb-2">Quick Actions</h3>
-                    <div class="space-y-2">
-                        <a href="add_company.php" class="block bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-4 rounded shadow transition duration-300">
+                <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">Quick Actions</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="add_company.php" class="block bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded shadow-sm transition duration-300">
                             Add Insurance Company
-                        </a>
-                        <a href="export_reports.php" class="block bg-purple-500 hover:bg-purple-600 text-white text-center py-2 px-4 rounded shadow transition duration-300">
-                            Export Reports
                         </a>
                     </div>
                 </div>
@@ -205,37 +280,37 @@ $claim_stats = $result->fetch_assoc();
 
         <!-- Pending Agent Applications -->
         <section id="pending-agents" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4 text-purple-800">Pending Agent Applications</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Pending Agent Applications</h2>
 
             <?php if (empty($pending_agents)): ?>
-                <div class="bg-white rounded-lg shadow p-4 border-t-4 border-purple-600">
+                <div class="bg-white rounded-lg shadow-sm p-6">
                     <p class="text-gray-500">No pending applications at this time.</p>
                 </div>
             <?php else: ?>
-                <div class="bg-white rounded-lg shadow overflow-x-auto border-t-4 border-purple-600">
+                <div class="bg-white rounded-lg shadow-sm overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-purple-100">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider">Name</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider">Email</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider hidden md:table-cell">Company</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider hidden md:table-cell">Region</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider hidden lg:table-cell">Submitted</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider">Document</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider">Actions</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Company</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Region</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden lg:table-cell">Submitted</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Document</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php foreach ($pending_agents as $agent): ?>
-                                <tr class="hover:bg-purple-50 transition duration-150">
-                                    <td class="px-4 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['full_name']); ?></td>
-                                    <td class="px-4 py-4 whitespace-nowrap"><?php echo htmlspecialchars($agent['email']); ?></td>
-                                    <td class="px-4 py-4 whitespace-nowrap hidden md:table-cell"><?php echo htmlspecialchars($agent['company_name']); ?></td>
-                                    <td class="px-4 py-4 whitespace-nowrap hidden md:table-cell"><?php echo htmlspecialchars($agent['region']); ?></td>
-                                    <td class="px-4 py-4 whitespace-nowrap hidden lg:table-cell"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></td>
-                                    <td class="px-4 py-4 whitespace-nowrap">
+                                <tr class="hover:bg-gray-50 transition duration-150">
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800"><?php echo htmlspecialchars($agent['full_name']); ?></td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800"><?php echo htmlspecialchars($agent['email']); ?></td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 hidden md:table-cell"><?php echo htmlspecialchars($agent['company_name']); ?></td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 hidden md:table-cell"><?php echo htmlspecialchars($agent['region']); ?></td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 hidden lg:table-cell"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800">
                                         <a href="<?php echo htmlspecialchars($agent['document_path']); ?>" target="_blank"
-                                            class="text-purple-600 hover:text-purple-800 transition duration-300">View Document</a>
+                                            class="text-blue-600 hover:text-blue-800 transition duration-300">View Document</a>
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -243,7 +318,7 @@ $claim_stats = $result->fetch_assoc();
                                                 <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                                 <input type="hidden" name="action" value="approve">
                                                 <button type="submit" onclick="return confirm('Are you sure you want to approve this agent?')"
-                                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded shadow transition duration-300 w-full sm:w-auto">
+                                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded shadow-sm transition duration-300 w-full sm:w-auto">
                                                     Approve
                                                 </button>
                                             </form>
@@ -251,7 +326,7 @@ $claim_stats = $result->fetch_assoc();
                                                 <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                                 <input type="hidden" name="action" value="reject">
                                                 <button type="submit" onclick="return confirm('Are you sure you want to reject this agent?')"
-                                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded shadow transition duration-300 w-full sm:w-auto">
+                                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded shadow-sm transition duration-300 w-full sm:w-auto">
                                                     Reject
                                                 </button>
                                             </form>
@@ -268,39 +343,39 @@ $claim_stats = $result->fetch_assoc();
         <!-- Mobile Pending Applications Detail View -->
         <section class="md:hidden">
             <?php if (!empty($pending_agents)): ?>
-                <h3 class="text-lg font-medium text-purple-800 mb-2">Applications Detail</h3>
+                <h3 class="text-lg font-medium text-gray-800 mb-4">Applications Detail</h3>
                 <div class="space-y-4">
                     <?php foreach ($pending_agents as $agent): ?>
-                        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-600">
-                            <h4 class="font-bold"><?php echo htmlspecialchars($agent['full_name']); ?></h4>
-                            <p class="text-sm text-gray-600 mb-2"><?php echo htmlspecialchars($agent['email']); ?></p>
+                        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+                            <h4 class="font-bold text-gray-800"><?php echo htmlspecialchars($agent['full_name']); ?></h4>
+                            <p class="text-sm text-gray-600 mb-3"><?php echo htmlspecialchars($agent['email']); ?></p>
                             
-                            <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                            <div class="grid grid-cols-2 gap-3 text-sm mb-4">
                                 <div>
-                                    <span class="font-medium text-purple-700">Company:</span>
-                                    <p class="text-gray-700"><?php echo htmlspecialchars($agent['company_name']); ?></p>
+                                    <span class="font-medium text-gray-700">Company:</span>
+                                    <p class="text-gray-800"><?php echo htmlspecialchars($agent['company_name']); ?></p>
                                 </div>
                                 <div>
-                                    <span class="font-medium text-purple-700">Region:</span>
-                                    <p class="text-gray-700"><?php echo htmlspecialchars($agent['region']); ?></p>
+                                    <span class="font-medium text-gray-700">Region:</span>
+                                    <p class="text-gray-800"><?php echo htmlspecialchars($agent['region']); ?></p>
                                 </div>
                                 <div>
-                                    <span class="font-medium text-purple-700">Submitted:</span>
-                                    <p class="text-gray-700"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></p>
+                                    <span class="font-medium text-gray-700">Submitted:</span>
+                                    <p class="text-gray-800"><?php echo date('M d, Y', strtotime($agent['created_at'])); ?></p>
                                 </div>
                                 <div>
-                                    <span class="font-medium text-purple-700">Document:</span>
+                                    <span class="font-medium text-gray-700">Document:</span>
                                     <p><a href="<?php echo htmlspecialchars($agent['document_path']); ?>" target="_blank"
-                                        class="text-purple-600 hover:text-purple-800">View</a></p>
+                                        class="text-blue-600 hover:text-blue-800">View</a></p>
                                 </div>
                             </div>
                             
-                            <div class="flex space-x-2 mt-3">
+                            <div class="flex space-x-3 mt-4">
                                 <form method="POST" action="" class="flex-1">
                                     <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                     <input type="hidden" name="action" value="approve">
                                     <button type="submit" onclick="return confirm('Are you sure you want to approve this agent?')"
-                                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow transition duration-300 w-full">
+                                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow-sm transition duration-300 w-full">
                                         Approve
                                     </button>
                                 </form>
@@ -308,7 +383,7 @@ $claim_stats = $result->fetch_assoc();
                                     <input type="hidden" name="agent_id" value="<?php echo $agent['id']; ?>">
                                     <input type="hidden" name="action" value="reject">
                                     <button type="submit" onclick="return confirm('Are you sure you want to reject this agent?')"
-                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow transition duration-300 w-full">
+                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-sm transition duration-300 w-full">
                                         Reject
                                     </button>
                                 </form>
